@@ -1,24 +1,155 @@
+/* style.css - LoveLink 2000 Red & White Theme */
 body {
-  background-color: #c0c0c0;
-  font-family: monospace;
-  font-size: 10px;
+  background-color: #333333; /* Dark background for browser */
+  color: #000000;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
   margin: 0;
-  padding: 0;
-  width: 176px;
-  height: 208px;
+  padding: 20px;
+  text-align: center; /* Center the wrapper */
+}
+
+.device-frame {
+  display: block; /* Container exists but has no visual style */
+}
+
+.mobile-wrapper {
+  width: 200px; /* Total width including bezel */
+  min-height: 208px; /* Nokia 6600 height */
+  background-color: #ffffff; /* Phone screen bg - White */
+  margin: 0 auto;
+  text-align: left;
+  border: 10px solid #000000; /* Phone bezel */
+  border-radius: 10px;
+  padding: 2px;
+  box-sizing: border-box; /* Include padding/border in width */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  font-size: 11px;
 }
 
 a {
-  color: #000080;
+  color: #d91c5c; /* Darker Red */
+  text-decoration: none;
+}
+
+a:hover {
   text-decoration: underline;
 }
 
-a:focus,
-a:hover {
-  background-color: #000000;
-  color: #ffffff;
+/* Header */
+/* Header */
+.header {
+  background-color: #d91c5c; /* Darker Red */
+  color: #ffffff; /* White */
+  font-family: "Times New Roman", Times, serif;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  padding: 4px;
+  border-bottom: 2px solid #8b0000; /* Dark Red */
 }
 
-.container {
+.header b {
+  color: #ffffff; /* Force white text in header */
+}
+
+/* Card / Container */
+.card {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-right: 2px solid #aaaaaa;
+  border-bottom: 2px solid #aaaaaa;
+  padding: 4px;
+  margin: 4px;
+}
+
+/* Typography */
+h1,
+h2,
+h1,
+h2,
+b {
+  color: #d91c5c;
+  font-family: "Times New Roman", Times, serif;
+}
+
+/* Beveled Buttons (Red) */
+a.button {
+  background-color: #d91c5c; /* Darker Red */
+  color: #ffffff; /* White */
+  font-weight: bold;
+  text-decoration: none;
+  border-style: outset;
+  border-width: 2px;
+  border-color: #ff6b95 #8b0000 #8b0000 #ff6b95;
+  padding: 2px 6px;
+  margin: 2px;
+  display: inline-block;
+}
+
+a.button:active {
+  border-style: inset;
+}
+
+/* Inputs */
+input,
+select,
+textarea {
+  font-family: monospace;
+  font-size: 11px;
+  background-color: #ffffff;
+  border: 1px solid #d91c5c;
+}
+
+/* Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td {
+  font-size: 11px;
+  padding: 3px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+/* Alternating Rows */
+.row0 {
+  background-color: #ffffff;
+}
+.row1 {
+  background-color: #fff0f5; /* Lavender Blush (Light Pink) */
+}
+
+/* Soft Keys Bar */
+.softkeys {
+  background-color: #d91c5c; /* Darker Red */
+  color: #ffffff;
+  border-top: 2px solid #8b0000;
   padding: 2px;
+}
+
+.softkeys td {
+  border: none;
+}
+
+.softkeys a {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* Utility */
+hr {
+  border: 0;
+  height: 1px;
+  background-color: #d91c5c;
+  margin: 4px 0;
+}
+
+.center {
+  text-align: center;
+}
+.small {
+  font-size: 9px;
+  color: #999999;
 }

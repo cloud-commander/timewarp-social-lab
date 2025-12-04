@@ -114,7 +114,8 @@ RUN cp php.ini-dist /usr/local/lib/php.ini
 RUN echo "AddType application/x-httpd-php .php" >> /usr/local/apache/conf/httpd.conf && \
     echo "AddType application/vnd.wap.xhtml+xml .xhtml" >> /usr/local/apache/conf/httpd.conf && \
     echo "AddType image/vnd.wap.wbmp .wbmp" >> /usr/local/apache/conf/httpd.conf && \
-    echo "AddType text/vnd.wap.wml .wml" >> /usr/local/apache/conf/httpd.conf
+    echo "AddType text/vnd.wap.wml .wml" >> /usr/local/apache/conf/httpd.conf && \
+    echo "DirectoryIndex index.php index.html" >> /usr/local/apache/conf/httpd.conf
 
 # Install iproute2 for 'tc' (Traffic Control)
 RUN apt-get install -y --force-yes iproute2
