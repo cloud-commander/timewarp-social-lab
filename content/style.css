@@ -1,0 +1,24 @@
+body {
+  background-color: #c0c0c0;
+  font-family: monospace;
+  font-size: 10px;
+  margin: 0;
+  padding: 0;
+  width: 176px;
+  height: 208px;
+}
+
+a {
+  color: #000080;
+  text-decoration: underline;
+}
+
+a:focus,
+a:hover {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.container {
+  padding: 2px;
+}

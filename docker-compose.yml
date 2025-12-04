@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  wap-server:
+    build: ./wap-server
+    container_name: wap-server
+    networks:
+      - wap-net
+    volumes:
+      - ./content:/usr/local/apache/htdocs
+    ports:
+      - "8080:80"
+    depends_on:
+      - wap-db
+    cap_add:
+      - NET_ADMIN # Required for tc (traffic control)
+
+  wap-db:
+    build: ./wap-db
+    container_name: wap-db
+    networks:
+      - wap-net
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: lovelink
+    volumes:
+      - ./db-init:/docker-entrypoint-initdb.d # Attempt standard init, but we override command anyway
+    command: ["sh", "/docker-entrypoint-initdb.d/init-db.sh"]
+
+  wap-client:
+    image: kasmweb/firefox:1.14.0
+    container_name: wap-client
+    networks:
+      - wap-net
+    ports:
+      - "6901:6901"
+    environment:
+      VNC_PW: password
+      # Launch with small window size to mimic phone
+      KASM_WINDOW_SIZE: "240x320"
+    shm_size: 512m
+    volumes:
+      - ./client-config/policies.json:/usr/lib/firefox/distribution/policies.json
+
+networks:
+  wap-net:
+    driver: bridge
