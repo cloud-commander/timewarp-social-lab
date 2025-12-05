@@ -139,17 +139,6 @@ Developer conventions and constraints to respect:
 
 --
 
-## Next Steps / Offerings
-
-If you want, I can:
-
-1. Produce a one-page incremental migration plan for either stack (minimal safety-first steps).
-2. Create a short `DEVELOPER.md` with step-by-step run, re-seed, and debug commands.
-3. Start a branch and modernize a single, well-contained path (for example: `login.php` → PDO + `password_hash`) with tests.
-
-Tell me which option you'd like and I will proceed.
-
---
 
 Maintainer: please open issues or request PR reviews for any modernization work — changes touching `db.php`, `init.php`, or `docker-compose.yml` should include a migration and smoke-test plan.
 
