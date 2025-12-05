@@ -9,11 +9,13 @@ echo "Starting safe_mysqld..."
 /usr/local/mysql/bin/safe_mysqld --user=mysql &
 pid="$!"
 
-# Wait for MySQL to start
+# Wait for MySQL to start (root password may already be set in data dir)
 echo "Waiting for MySQL to start..."
-# We need to specify socket or host. localhost should work if socket is standard.
-# Compiled default socket might be /tmp/mysql.sock.
-until mysqladmin ping --silent; do
+until mysqladmin -uroot -ppassword ping --silent >/dev/null 2>&1; do
+    # fallback attempt without password in case of a brand-new datadir
+    if mysqladmin ping --silent >/dev/null 2>&1; then
+        break
+    fi
     echo "MySQL is unavailable - sleeping"
     sleep 1
 done
@@ -21,9 +23,9 @@ done
 echo "MySQL is up - executing init"
 
 # Create Database
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS lovelink;"
-mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'password' WITH GRANT OPTION;"
-mysql -u root -e "FLUSH PRIVILEGES;"
+mysql -u root -ppassword -e "CREATE DATABASE IF NOT EXISTS lovelink;"
+mysql -u root -ppassword -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'password' WITH GRANT OPTION;"
+mysql -u root -ppassword -e "FLUSH PRIVILEGES;"
 
 # Set root password (initially empty)
 # mysqladmin -u root password 'password'
@@ -34,12 +36,8 @@ mysql -u root -e "FLUSH PRIVILEGES;"
 # Import Schema if it exists
 if [ -f /docker-entrypoint-initdb.d/schema.sql ]; then
     echo "Importing schema..."
-    mysql -u root lovelink < /docker-entrypoint-initdb.d/schema.sql
+    mysql -u root -ppassword lovelink < /docker-entrypoint-initdb.d/schema.sql
 fi
-
-# Secure it (Set password)
-echo "Setting root password..."
-mysqladmin -u root password 'password'
 
 echo "Initialization complete. MySQL running."
 

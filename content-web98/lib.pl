@@ -1,13 +1,15 @@
 #!/usr/bin/perl
 use strict;
+use lib '.';
 use CGI qw(:standard);
 use POSIX qw(strftime);
 require 'config.pl';
+our ($DB_HOST,$DB_NAME,$DB_USER,$DB_PASS,$SITE_NAME,$BASE_URL);
 
 sub db_query {
     my ($sql) = @_;
     my @rows;
-    my $cmd = "mysql -h $DB_HOST -u $DB_USER -p$DB_PASS --batch --skip-column-names $DB_NAME -e \"$sql\"";
+    my $cmd = "/usr/local/mysql/bin/mysql -h $DB_HOST -u $DB_USER -p$DB_PASS --batch --skip-column-names $DB_NAME -e \"$sql\" 2>/dev/null";
     open(my $fh, "$cmd |") or return [];
     while (my $line = <$fh>) {
         chomp $line;
@@ -19,7 +21,7 @@ sub db_query {
 
 sub db_do {
     my ($sql) = @_;
-    system("mysql", "-h", $DB_HOST, "-u", $DB_USER, "-p$DB_PASS", $DB_NAME, "-e", $sql);
+    system("/usr/local/mysql/bin/mysql -h $DB_HOST -u $DB_USER -p$DB_PASS $DB_NAME -e \"$sql\" 2>/dev/null");
 }
 
 sub sql_str {
@@ -48,7 +50,7 @@ sub current_user {
     my $cgi = shift;
     my $sid = $cgi->cookie('sid') || $cgi->param('sid') || '';
     return undef unless $sid;
-    my $rows = db_query("SELECT users.id, users.username, users.full_name FROM sessions JOIN users ON sessions.user_id=users.id WHERE sessions.id='" . $sid . "' AND sessions.expires_at > NOW() LIMIT 1");
+    my $rows = db_query("SELECT users.id, users.username, users.full_name FROM sessions, users WHERE sessions.user_id=users.id AND sessions.id='" . $sid . "' AND sessions.expires_at > NOW() LIMIT 1");
     return undef unless @$rows;
     return { sid => $sid, id => $rows->[0]->[0], username => $rows->[0]->[1], full_name => $rows->[0]->[2] };
 }

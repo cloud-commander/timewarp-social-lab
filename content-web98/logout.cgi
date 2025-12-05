@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-use strict;use CGI qw(:standard);
+use strict;use lib '.';use CGI qw(:standard);
 require 'lib.pl';
 my $cgi = CGI->new;
 my $u = current_user($cgi);

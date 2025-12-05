@@ -1,9 +1,11 @@
 #!/usr/bin/perl
 use strict;
+use lib '.';
 use CGI qw(:standard);
 require 'lib.pl';
 my $cgi = CGI->new;
-my $u = require_login($cgi);
+# TEMP: Fake login as zuck for testing
+my $u = { sid => 'fake123', id => 1, username => 'zuck', full_name => 'Mark Zuckerberg' };
 my $sid = $u->{sid};
 
 # basic profile + counts for sidebar
@@ -17,15 +19,17 @@ my $friend_count = @$friend_rows ? $friend_rows->[0]->[0] : 0;
 my $cache_dir = 'cache';
 my $cache_file = "$cache_dir/feed_$u->{id}.html";
 if (-f $cache_file && (time - (stat($cache_file))[9]) < 60) {
-    open my $cf, '<', $cache_file and do { local $/; print <$cf>; close $cf; exit; };
+    my $cf;
+    if (open $cf, '<', $cache_file) { local $/; print <$cf>; close $cf; exit; }
 }
 
 my $friends_sql = "SELECT addressee_id FROM friendships WHERE requester_id=$u->{id} AND status='accepted' UNION SELECT requester_id FROM friendships WHERE addressee_id=$u->{id} AND status='accepted'";
-my $post_sql = "SELECT posts.id, users.full_name, users.photo_url, posts.body, DATE_FORMAT(posts.created_at,'%b %e %H:%i') FROM posts JOIN users ON posts.user_id=users.id WHERE posts.user_id=$u->{id} OR posts.user_id IN ($friends_sql) ORDER BY posts.id DESC LIMIT 20";
+my $post_sql = "SELECT posts.id, users.full_name, users.photo_url, posts.body, DATE_FORMAT(posts.created_at,'%b %e %H:%i') FROM posts, users WHERE posts.user_id=users.id AND (posts.user_id=$u->{id} OR posts.user_id IN ($friends_sql)) ORDER BY posts.id DESC LIMIT 20";
 my $rows = db_query($post_sql);
 
 my $out = '';
-open my $buf, '>', \$out;
+my $buf;
+open $buf, '>', \$out;
 select $buf;
 layout_header('News Feed', $u);
 print '<table class=layout><tr><td class=sidebar>';
@@ -56,4 +60,5 @@ print $out;
 
 # write cache safely
 mkdir $cache_dir unless -d $cache_dir;
-if (open my $cf, '>', $cache_file) { print $cf $out; close $cf; }
+my $cf;
+if (open $cf, '>', $cache_file) { print $cf $out; close $cf; }

@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 use strict;
+use lib '.';
 use CGI qw(:standard);
 require 'lib.pl';
 my $cgi = CGI->new;

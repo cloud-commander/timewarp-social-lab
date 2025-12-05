@@ -55,6 +55,7 @@ RUN make CFLAGS="-std=gnu89 -O0" CXXFLAGS="-O0" && make install && \
     echo "/usr/local/mysql/lib/mysql" > /etc/ld.so.conf.d/mysql.conf && \
     ldconfig
 ENV LD_LIBRARY_PATH="/usr/local/mysql/lib/mysql:$LD_LIBRARY_PATH"
+ENV PATH="/usr/local/mysql/bin:$PATH"
 
 # -----------------------------------------------------------------------------
 # 2. Compile Apache 1.3.4 (1999)
@@ -96,6 +97,7 @@ RUN apt-get install -y --force-yes iproute2
 
 RUN echo '#!/bin/bash' > /start.sh && \
     echo '# Traffic Control: 48kbps, ~250ms latency (dial-up feel)' >> /start.sh && \
+    echo 'export PATH=/usr/local/mysql/bin:$PATH' >> /start.sh && \
     echo 'tc qdisc add dev eth0 root tbf rate 48kbit burst 10kb latency 250ms' >> /start.sh && \
     echo '/usr/local/apache/bin/apachectl start' >> /start.sh && \
     echo 'tail -f /usr/local/apache/logs/error_log' >> /start.sh && \
