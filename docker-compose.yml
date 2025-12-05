@@ -42,6 +42,34 @@ services:
     volumes:
       - ./client-config/policies.json:/usr/lib/firefox/distribution/policies.json
 
+  web98-server:
+    build: ./web98-server
+    container_name: web98-server
+    networks:
+      - web98-net
+    volumes:
+      - ./content-web98:/usr/local/apache/htdocs
+    ports:
+      - "8081:80"
+    depends_on:
+      - web98-db
+    cap_add:
+      - NET_ADMIN
+
+  web98-db:
+    build: ./web98-db
+    container_name: web98-db
+    networks:
+      - web98-net
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: lovelink
+    volumes:
+      - ./db-init-web98:/docker-entrypoint-initdb.d
+    command: ["sh", "/docker-entrypoint-initdb.d/init-db.sh"]
+
 networks:
   wap-net:
+    driver: bridge
+  web98-net:
     driver: bridge
