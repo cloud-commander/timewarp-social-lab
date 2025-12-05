@@ -20,7 +20,9 @@ RUN echo 'deb http://archive.debian.org/debian stretch main' > /etc/apt/sources.
     flex \
     automake \
     gawk \
-    procps
+    procps \
+    perl \
+    libcgi-pm-perl
 
 # -----------------------------------------------------------------------------
 # 1. Compile MySQL 3.23.58 client libs (close to 1998 protocol, readily available)
@@ -76,24 +78,18 @@ RUN CFLAGS="-std=gnu89 -O0" bash ./configure \
 RUN make && make install
 
 # -----------------------------------------------------------------------------
-# 3. Compile Perl 5.005_03 (Mar 1999; close to 1998, bundled CGI.pm 2.x)
-# -----------------------------------------------------------------------------
-WORKDIR /usr/src
-RUN wget https://www.cpan.org/src/5.0/perl5.005_03.tar.gz && \
-    tar xzf perl5.005_03.tar.gz && \
-    rm -rf perl5.005_03/ext/IPC/SysV && \
-    grep -v 'ext/IPC/SysV' perl5.005_03/MANIFEST > perl5.005_03/MANIFEST.clean && mv perl5.005_03/MANIFEST.clean perl5.005_03/MANIFEST && \
-    cd perl5.005_03 && \
-    ./Configure -des -Dprefix=/usr/local/perl -Dlibs='-lm' -Dman1dir=none -Dman3dir=none -Uuseperlio -Uusethreads && \
-    make perl SKIP_EXT='IPC/SysV DB_File GDBM_File ODBM_File NDBM_File' && make install.perl
-ENV PATH="/usr/local/perl/bin:${PATH}"
-
 # -----------------------------------------------------------------------------
 # Configuration (CGI only)
 # -----------------------------------------------------------------------------
-RUN echo "AddHandler cgi-script .cgi" >> /usr/local/apache/conf/httpd.conf && \
-    echo "DirectoryIndex index.cgi index.html" >> /usr/local/apache/conf/httpd.conf && \
-    sed -i 's/Options Indexes FollowSymLinks/Options Indexes FollowSymLinks ExecCGI/' /usr/local/apache/conf/httpd.conf
+RUN { \
+      echo "AddHandler cgi-script .cgi"; \
+      echo "DirectoryIndex index.cgi index.html"; \
+      echo "Options Indexes FollowSymLinks ExecCGI"; \
+      echo "ServerName 127.0.0.1"; \
+    } >> /usr/local/apache/conf/httpd.conf && \
+    sed -i 's#Options Indexes FollowSymLinks#Options Indexes FollowSymLinks ExecCGI#g' /usr/local/apache/conf/httpd.conf && \
+    grep -v -E 'php3_module|libphp\\.so|AddModule.*php3|AddType application/x-httpd-php' /usr/local/apache/conf/httpd.conf > /tmp/httpd.conf && \
+    mv /tmp/httpd.conf /usr/local/apache/conf/httpd.conf
 
 # Traffic shaping tool
 RUN apt-get install -y --force-yes iproute2

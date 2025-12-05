@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   wap-server:
     build: ./wap-server

@@ -1,0 +1,55 @@
+# Virtualenvs and Python
+venv-local/
+.venv/
+env/
+venv/
+
+# Python caches, bytecode
+__pycache__/
+/*.pyc
+/*.pyo
+
+# Distribution / packaging
+build/
+dist/
+/*.egg-info
+/*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Test and coverage
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Editor directories and files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# macOS
+.DS_Store
+
+# Logs and runtime files (root-level and tmp/ directory)
+logs/
+tmp/
+/*.pid
+
+# Docker
+.env
+docker-compose.override.yml
+
+# Misc caches
+.cache/
+.mypy_cache/
+.tox/
+
+# Ignore compiled archives
+/*.tar.gz
+/*.zip
+
+.github/

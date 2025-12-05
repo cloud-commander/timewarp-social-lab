@@ -68,17 +68,34 @@ sub layout_header {
     print "Content-Type: text/html\n\n";
     print "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2 Final//EN\">\n";
     print "<html><head><title>" . html_escape($title) . "</title>";
-    print "<style>body{font-family:Arial,Helvetica,sans-serif;font-size:12px;background:#f0f0f0;color:#000;margin:8px;}a{color:#003399;} .nav{background:#003399;color:#fff;padding:4px;} .card{background:#fff;border:1px solid #999;padding:6px;margin-bottom:8px;} .meta{color:#555;font-size:11px;} textarea,input{font-family:Arial;font-size:12px;} .btn{background:#c0c0c0;border:2px outset #fff;padding:2px 6px;text-decoration:none;color:#000;} </style>";
-    print "</head><body>";
+    print "<style>
+body{font-family:Verdana,Arial,Helvetica,sans-serif;font-size:12px;background:#e7e9f5;color:#111;margin:0;padding:0;}
+.wrap{width:760px;margin:0 auto;padding:8px;}
+a{color:#1d2d5f;text-decoration:none;}
+a:hover{text-decoration:underline;}
+.nav{background:#3b5998;color:#fff;padding:6px 8px;margin:0 -8px 12px -8px;}
+.nav a{color:#fff;font-weight:bold;margin-right:12px;}
+.navtbl td{font-size:12px;}
+.card{background:#fff;border:1px solid #b3b7d6;padding:8px;margin-bottom:10px;}
+.meta{color:#555;font-size:11px;}
+textarea,input{font-family:Verdana,Arial;font-size:12px;}
+.btn{background:#d8dfea;border:1px solid #5973a9;padding:3px 7px;text-decoration:none;color:#1d2d5f;font-weight:bold;}
+.layout{width:100%;border-collapse:collapse;}
+.sidebar{width:180px;vertical-align:top;padding-right:10px;}
+.main{vertical-align:top;}
+ul.clean{margin:4px 0 0 14px;padding:0;}
+ul.clean li{margin-bottom:4px;}
+</style>";
+    print "</head><body><div class=\"wrap\">";
     if ($u) {
-        print "<div class=nav><b>$SITE_NAME</b> &middot; Logged in as " . html_escape($u->{full_name}) . " | <a href='feed.cgi?sid=$u->{sid}'>Feed</a> | <a href='profile.cgi?sid=$u->{sid}&id=$u->{id}'>Profile</a> | <a href='friends.cgi?sid=$u->{sid}'>Friends</a> | <a href='messages.cgi?sid=$u->{sid}'>Inbox</a> | <a href='logout.cgi?sid=$u->{sid}'>Logout</a></div>";
+        print "<div class=nav><table class=navtbl width=100% cellspacing=0 cellpadding=0><tr><td><b>$SITE_NAME</b> &nbsp; <a href='feed.cgi?sid=$u->{sid}'>Home</a> <a href='profile.cgi?sid=$u->{sid}&id=$u->{id}'>Profile</a> <a href='friends.cgi?sid=$u->{sid}'>Friends</a> <a href='people.cgi?sid=$u->{sid}'>People</a> <a href='messages.cgi?sid=$u->{sid}'>Inbox</a></td><td align=right class=meta>Signed in as " . html_escape($u->{full_name}) . " | <a href='logout.cgi?sid=$u->{sid}'>Logout</a></td></tr></table></div>";
     } else {
         print "<div class=nav><b>$SITE_NAME</b></div>";
     }
 }
 
 sub layout_footer {
-    print "<div class=meta>Dial-up friendly build. ~50KB/page.</div></body></html>";
+    print "<div class=meta>Dial-up friendly build. ~50KB/page.</div></div></body></html>";
 }
 
 1;
